@@ -3,94 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Open the Box: Bahasa Jerman</title>
-    <!-- STREAMING_CHUNK:Loading Tailwind CSS... -->
+    <title>Wordwall Style: Open the Box - Bahasa Jerman</title>
+    <!-- STREAMING_CHUNK:Loading Tailwind CSS & Font... -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Fredoka', sans-serif; }
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
     </style>
 </head>
-<body class="bg-gradient-to-br from-indigo-50 to-blue-100 min-h-screen flex flex-col items-center justify-center p-4">
+<body class="bg-indigo-900 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-700 via-purple-900 to-slate-950 min-h-screen flex flex-col items-center justify-between p-4 md:p-6 text-white">
 
-    <!-- STREAMING_CHUNK:Rendering main container... -->
-    <div class="max-w-3xl w-full bg-white rounded-3xl shadow-xl p-6 md:p-8 border border-white/50">
-        <header class="text-center mb-8">
-            <h1 class="text-2xl md:text-3xl font-bold text-indigo-700 mb-2">🎁 Open the Box: Bahasa Jerman</h1>
-            <p class="text-slate-600 text-sm md:text-base">Pilih salah satu dari 9 kotak di bawah untuk membuka soal latihan seputar Hobi & Verba!</p>
-            <div class="mt-4 flex justify-center gap-4 text-sm font-semibold">
-                <span class="bg-indigo-100 text-indigo-800 px-4 py-1.5 rounded-full shadow-sm">Kotak Terbuka: <span id="opened-count">0</span>/9</span>
-                <span class="bg-emerald-100 text-emerald-800 px-4 py-1.5 rounded-full shadow-sm">Skor: <span id="score">0</span></span>
-            </div>
-        </header>
-
-        <!-- STREAMING_CHUNK:Rendering 9 boxes grid... -->
-        <div id="box-grid" class="grid grid-cols-3 gap-4 md:gap-6 mb-8">
-            <!-- Kotak akan di-generate via JavaScript -->
+    <!-- STREAMING_CHUNK:Rendering header... -->
+    <header class="text-center w-full max-w-4xl mt-2">
+        <h1 class="text-3xl md:text-5xl font-bold tracking-wide text-yellow-300 drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] mb-2">🎁 OPEN THE BOX</h1>
+        <p class="text-indigo-200 text-sm md:text-base">Pilih kotak untuk membuka soal tantangan Bahasa Jerman ala Wordwall!</p>
+        <div class="flex justify-center gap-6 mt-4 font-semibold text-lg">
+            <span class="bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 shadow-inner">Kotak Terbuka: <span id="opened-count" class="text-yellow-400">0</span>/9</span>
+            <span class="bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 shadow-inner">Skor: <span id="score" class="text-emerald-400">0</span></span>
         </div>
+    </header>
 
-        <!-- STREAMING_CHUNK:Rendering reset button... -->
-        <div class="text-center">
-            <button onclick="resetGame()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-6 py-2.5 rounded-xl transition shadow-sm active:scale-95">
-                🔄 Main Lagi / Reset Game
-            </button>
+    <!-- STREAMING_CHUNK:Rendering Wordwall style 9 boxes grid... -->
+    <main class="w-full max-w-4xl my-auto py-6">
+        <div id="box-grid" class="grid grid-cols-3 gap-4 md:gap-6">
+            <!-- Kotak-kotak 3D di-generate via JavaScript -->
         </div>
-    </div>
+    </main>
 
-    <!-- STREAMING_CHUNK:Rendering question modal... -->
-    <div id="question-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative transform transition-all animate-in fade-in zoom-in-95">
-            <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
-                <h3 id="modal-title" class="text-xl font-bold text-indigo-600">Soal Kotak #</h3>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 transition">&times;</button>
+    <!-- STREAMING_CHUNK:Rendering footer & download button... -->
+    <footer class="w-full max-w-4xl flex flex-col sm:flex-row justify-between items-center gap-4 mb-2">
+        <button onclick="resetGame()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-6 py-2.5 rounded-2xl shadow-lg transition active:scale-95 border-b-4 border-rose-800">
+            🔄 Reset Game
+        </button>
+        <button onclick="downloadHTML()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-2.5 rounded-2xl shadow-lg transition active:scale-95 border-b-4 border-emerald-800 flex items-center gap-2">
+            📥 Download untuk GitHub
+        </button>
+    </footer>
+
+    <!-- STREAMING_CHUNK:Rendering interactive question modal... -->
+    <div id="question-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-900 border-4 border-indigo-500 rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative animate-in zoom-in-95 duration-200">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+                <h3 id="modal-title" class="text-2xl font-bold text-yellow-300">Kotak #</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white text-3xl font-bold w-10 h-10 flex items-center justify-center rounded-xl hover:bg-slate-800 transition">&times;</button>
             </div>
             
             <div id="modal-body" class="mb-6">
-                <!-- Pertanyaan & Pilihan -->
+                <!-- Konten Soal -->
             </div>
 
             <div id="modal-footer" class="flex justify-end">
-                <button id="submit-answer" onclick="checkAnswer()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl transition shadow-md shadow-indigo-200">
-                    Jawab
+                <button id="submit-answer" onclick="checkAnswer()" class="bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-extrabold px-6 py-3 rounded-2xl shadow-lg transition active:scale-95 border-b-4 border-yellow-600">
+                    Kirim Jawaban
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- STREAMING_CHUNK:Initializing application logic... -->
+    <!-- STREAMING_CHUNK:Initializing Wordwall game mechanics & logic... -->
     <script>
         const questions = [
             {
                 id: 1,
-                question: "Lengkapi kalimat berikut berdasarkan gambar 3a (kegiatan memasak):\nIch _____ gern!",
+                question: "Lengkapi kalimat berikut berdasarkan gambar hobi memasak:\nIch _____ gern!",
                 options: ["koche", "kochest", "kocht", "kochen"],
                 correct: 0,
                 explanation: "Subjek 'Ich' menggunakan konjugasi verba 'kochen' menjadi 'koche'."
             },
             {
                 id: 2,
-                question: "Lengkapi kalimat pada gambar 3a (kegiatan membaca buku):\nBetty und Bücher. 😊 Sie _____ gern.",
+                question: "Lengkapi kalimat membaca buku:\nBetty und Bücher. 😊 Sie _____ gern.",
                 options: ["liest", "lese", "lest", "lesen"],
                 correct: 0,
                 explanation: "Subjek 'Sie' (singular/perempuan) untuk verba 'lesen' berubah menjadi 'liest'."
             },
             {
                 id: 3,
-                question: "Lengkapi kalimat pada gambar 3a (kegiatan menyanyi):\nBen _____ toll!!",
+                question: "Lengkapi kalimat menyanyi:\nBen _____ toll!!",
                 options: ["singst", "singt", "singen", "singe"],
                 correct: 1,
                 explanation: "Subjek 'Ben' setara dengan 'er' (dia laki-laki), sehingga verba 'singen' menjadi 'singt'."
             },
             {
                 id: 4,
-                question: "Lengkapi percikan dialog 3b bagian A:\nLustig! Sing_____ du auch so gut?",
+                question: "Lengkapi percikan dialog A:\nLustig! Sing_____ du auch so gut?",
                 options: ["-st", "-t", "-en", "-e"],
                 correct: 0,
                 explanation: "Personalpronomen 'du' mendapat akhiran konjugasi '-st' (singst)."
             },
             {
                 id: 5,
-                question: "Lengkapi percikan dialog 3b bagian B:\nParis!! ❤️ Sprich_____ du Französisch?",
+                question: "Lengkapi percikan dialog B:\nParis!! ❤️ Sprich_____ du Französisch?",
                 options: ["-st", "-t", "-en", "-"],
                 correct: 0,
                 explanation: "Verba 'sprechen' mengalami perubahan vokal (e->i) untuk 'du' dan berakhiran '-st' (sprichst)."
@@ -104,21 +111,21 @@
             },
             {
                 id: 7,
-                question: "Bagaimana respons konfirmasi penolakan yang sopan dalam bahasa Jerman (sesuai materi 4c/5a)?\n- Gehen wir ins Kino?\n- _____, das geht leider nicht.",
+                question: "Respons penolakan ajakan yang sopan dalam bahasa Jerman:\n- Gehen wir ins Kino?\n- _____, das geht leider nicht.",
                 options: ["Ja, gern", "Nein", "Super", "Am Montag"],
                 correct: 1,
                 explanation: "Kata 'Nein' digunakan untuk menolak ajakan dengan sopan ('Nein, das geht leider nicht')."
             },
             {
                 id: 8,
-                question: "Preposisi apa yang digunakan untuk menyatakan hari (misal: hari Senin)?\n_____ Montag",
+                question: "Preposisi penunjuk waktu untuk hari (misal: hari Senin):\n_____ Montag",
                 options: ["In", "Am", "Um", "Im"],
                 correct: 1,
                 explanation: "Keterangan waktu berupa hari dalam bahasa Jerman selalu menggunakan preposisi 'Am'."
             },
             {
                 id: 9,
-                question: "Terjemahkan ungkapan ajakan berikut ke dalam bahasa Jerman:\n'Pergi ke bioskop?'",
+                question: "Terjemahan ungkapan ajakan: 'Pergi ke bioskop?'",
                 options: ["Gehen wir ins Kino?", "Gehen wir ins Theater?", "Gehen wir ins Café?", "Gehen wir ins Schwimmbad?"],
                 correct: 0,
                 explanation: "'Ins Kino' berarti ke bioskop, sehingga kalimat tanyanya 'Gehen wir ins Kino?'."
@@ -142,15 +149,20 @@
             questions.forEach((q, index) => {
                 const isOpened = openedBoxes.includes(q.id);
                 const box = document.createElement('div');
-                box.className = `h-28 md:h-32 rounded-2xl flex flex-col items-center justify-center font-bold text-lg cursor-pointer transition-all duration-300 shadow-md ${
+                
+                box.className = `h-28 md:h-36 rounded-2xl flex flex-col items-center justify-center font-bold text-xl cursor-pointer transition-all duration-300 shadow-xl border-b-8 ${
                     isOpened 
-                        ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none' 
-                        : 'bg-gradient-to-tr from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white hover:scale-105 shadow-indigo-200'
+                        ? 'bg-slate-800 border-slate-900 text-slate-500 cursor-not-allowed scale-95 shadow-none' 
+                        : 'bg-gradient-to-b from-yellow-400 to-amber-500 border-amber-700 text-slate-950 hover:from-yellow-300 hover:to-amber-400 hover:scale-105 active:scale-95'
                 }`;
-                box.innerHTML = `<span class="text-2xl mb-1">${isOpened ? '✅' : '🎁'}</span><span>Kotak ${index + 1}</span>`;
+                
+                box.innerHTML = `
+                    <span class="text-3xl md:text-4xl mb-1">${isOpened ? '✅' : '🎁'}</span>
+                    <span class="text-sm md:text-base tracking-wider uppercase">${isOpened ? 'Terbuka' : 'Kotak ' + (index + 1)}</span>
+                `;
                 
                 if (!isOpened) {
-                    box.onclick = () => openBox(q.id);
+                    box.onclick = () => openBoxAnimation(box, q.id);
                 }
                 gridEl.appendChild(box);
             });
@@ -158,25 +170,33 @@
             scoreEl.textContent = score;
         }
 
-        function openBox(id) {
+        function openBoxAnimation(boxElement, id) {
+            // Animasi efek putar/buka ala Wordwall
+            boxElement.classList.add('scale-110', 'rotate-6', 'brightness-125');
+            setTimeout(() => {
+                openBoxModal(id);
+            }, 250);
+        }
+
+        function openBoxModal(id) {
             activeBoxId = id;
             const q = questions.find(item => item.id === id);
             
-            modalTitle.textContent = `Soal Kotak #${id}`;
+            modalTitle.textContent = `🎁 Kotak Soal #${id}`;
             modalBody.innerHTML = `
-                <p class="text-slate-800 font-medium mb-4 whitespace-pre-line text-sm md:text-base leading-relaxed">${q.question}</p>
-                <div class="space-y-2.5" id="options-container">
+                <p class="text-slate-100 font-medium mb-5 whitespace-pre-line text-base md:text-lg leading-relaxed">${q.question}</p>
+                <div class="space-y-3" id="options-container">
                     ${q.options.map((opt, i) => `
-                        <label class="flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 hover:bg-indigo-50/70 hover:border-indigo-300 cursor-pointer transition">
-                            <input type="radio" name="quiz-opt" value="${i}" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
-                            <span class="text-slate-700 font-medium text-sm md:text-base">${opt}</span>
+                        <label class="flex items-center gap-3 p-4 rounded-2xl border-2 border-slate-700 bg-slate-800/80 hover:bg-indigo-900/60 hover:border-indigo-400 cursor-pointer transition">
+                            <input type="radio" name="quiz-opt" value="${i}" class="w-5 h-5 text-yellow-400 focus:ring-yellow-400 bg-slate-900 border-slate-700">
+                            <span class="text-slate-100 font-medium text-base md:text-lg">${opt}</span>
                         </label>
                     `).join('')}
                 </div>
-                <div id="feedback" class="mt-4 hidden p-3.5 rounded-xl text-sm"></div>
+                <div id="feedback" class="mt-4 hidden p-4 rounded-2xl text-sm md:text-base font-medium"></div>
             `;
             submitBtn.style.display = 'block';
-            submitBtn.textContent = 'Jawab';
+            submitBtn.textContent = 'Kirim Jawaban';
             submitBtn.onclick = checkAnswer;
             
             modalEl.classList.remove('hidden');
@@ -188,9 +208,8 @@
             const feedbackEl = document.getElementById('feedback');
             
             if (!selected) {
-                // Mengganti alert dengan pemberitahuan ramah tanpa fungsi alert bawaan
-                feedbackEl.className = 'mt-4 p-3.5 rounded-xl text-sm bg-amber-50 text-amber-800 font-medium border border-amber-200';
-                feedbackEl.innerHTML = '⚠️ Silakan pilih salah satu jawaban terlebih dahulu!';
+                feedbackEl.className = 'mt-4 p-4 rounded-2xl text-sm bg-amber-950/80 text-amber-300 font-medium border border-amber-800/50';
+                feedbackEl.innerHTML = '⚠️ Pilih salah satu jawaban terlebih dahulu ya!';
                 feedbackEl.classList.remove('hidden');
                 return;
             }
@@ -204,11 +223,11 @@
 
             if (userChoice === q.correct) {
                 score += 10;
-                feedbackEl.className = 'mt-4 p-3.5 rounded-xl text-sm bg-emerald-50 text-emerald-800 font-medium border border-emerald-200';
-                feedbackEl.innerHTML = `<strong>Benar! 🎉</strong> ${q.explanation}`;
+                feedbackEl.className = 'mt-4 p-4 rounded-2xl text-base bg-emerald-950/90 text-emerald-300 font-semibold border-2 border-emerald-600 shadow-lg';
+                feedbackEl.innerHTML = `<strong>Hebat! Benar! 🎉</strong><br>${q.explanation}`;
             } else {
-                feedbackEl.className = 'mt-4 p-3.5 rounded-xl text-sm bg-rose-50 text-rose-800 font-medium border border-rose-200';
-                feedbackEl.innerHTML = `<strong>Kurang tepat. ❌</strong> Jawaban yang benar: <em>${q.options[q.correct]}</em>.<br>${q.explanation}`;
+                feedbackEl.className = 'mt-4 p-4 rounded-2xl text-base bg-rose-950/90 text-rose-300 font-semibold border-2 border-rose-600 shadow-lg';
+                feedbackEl.innerHTML = `<strong>Kurang tepat ❌</strong><br>Jawaban benar: <em>${q.options[q.correct]}</em>.<br>${q.explanation}`;
             }
             
             feedbackEl.classList.remove('hidden');
@@ -222,7 +241,7 @@
             
             initGame();
 
-            submitBtn.textContent = 'Tutup';
+            submitBtn.textContent = 'Tutup Kotak';
             submitBtn.onclick = closeModal;
         }
 
@@ -232,13 +251,26 @@
         }
 
         function resetGame() {
-            if (confirm('Yakin ingin mereset permainan?')) {
+            if (confirm('Yakin ingin mereset seluruh kotak dan skor?')) {
                 localStorage.removeItem('openedBoxes');
                 localStorage.removeItem('score');
                 openedBoxes = [];
                 score = 0;
                 initGame();
             }
+        }
+
+        function downloadHTML() {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'index.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
 
         initGame();
