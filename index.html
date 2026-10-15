@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Open the Box: Bahasa Jerman</title>
+    <!-- STREAMING_CHUNK:Loading Tailwind CSS... -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 to-blue-100 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- STREAMING_CHUNK:Rendering main container... -->
+    <div class="max-w-3xl w-full bg-white rounded-3xl shadow-xl p-6 md:p-8 border border-white/50">
+        <header class="text-center mb-8">
+            <h1 class="text-2xl md:text-3xl font-bold text-indigo-700 mb-2">🎁 Open the Box: Bahasa Jerman</h1>
+            <p class="text-slate-600 text-sm md:text-base">Pilih salah satu dari 9 kotak di bawah untuk membuka soal latihan seputar Hobi & Verba!</p>
+            <div class="mt-4 flex justify-center gap-4 text-sm font-semibold">
+                <span class="bg-indigo-100 text-indigo-800 px-4 py-1.5 rounded-full shadow-sm">Kotak Terbuka: <span id="opened-count">0</span>/9</span>
+                <span class="bg-emerald-100 text-emerald-800 px-4 py-1.5 rounded-full shadow-sm">Skor: <span id="score">0</span></span>
+            </div>
+        </header>
+
+        <!-- STREAMING_CHUNK:Rendering 9 boxes grid... -->
+        <div id="box-grid" class="grid grid-cols-3 gap-4 md:gap-6 mb-8">
+            <!-- Kotak akan di-generate via JavaScript -->
+        </div>
+
+        <!-- STREAMING_CHUNK:Rendering reset button... -->
+        <div class="text-center">
+            <button onclick="resetGame()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-6 py-2.5 rounded-xl transition shadow-sm active:scale-95">
+                🔄 Main Lagi / Reset Game
+            </button>
+        </div>
+    </div>
+
+    <!-- STREAMING_CHUNK:Rendering question modal... -->
+    <div id="question-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative transform transition-all animate-in fade-in zoom-in-95">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                <h3 id="modal-title" class="text-xl font-bold text-indigo-600">Soal Kotak #</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 transition">&times;</button>
+            </div>
+            
+            <div id="modal-body" class="mb-6">
+                <!-- Pertanyaan & Pilihan -->
+            </div>
+
+            <div id="modal-footer" class="flex justify-end">
+                <button id="submit-answer" onclick="checkAnswer()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl transition shadow-md shadow-indigo-200">
+                    Jawab
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STREAMING_CHUNK:Initializing application logic... -->
+    <script>
+        const questions = [
+            {
+                id: 1,
+                question: "Lengkapi kalimat berikut berdasarkan gambar 3a (kegiatan memasak):\nIch _____ gern!",
+                options: ["koche", "kochest", "kocht", "kochen"],
+                correct: 0,
+                explanation: "Subjek 'Ich' menggunakan konjugasi verba 'kochen' menjadi 'koche'."
+            },
+            {
+                id: 2,
+                question: "Lengkapi kalimat pada gambar 3a (kegiatan membaca buku):\nBetty und Bücher. 😊 Sie _____ gern.",
+                options: ["liest", "lese", "lest", "lesen"],
+                correct: 0,
+                explanation: "Subjek 'Sie' (singular/perempuan) untuk verba 'lesen' berubah menjadi 'liest'."
+            },
+            {
+                id: 3,
+                question: "Lengkapi kalimat pada gambar 3a (kegiatan menyanyi):\nBen _____ toll!!",
+                options: ["singst", "singt", "singen", "singe"],
+                correct: 1,
+                explanation: "Subjek 'Ben' setara dengan 'er' (dia laki-laki), sehingga verba 'singen' menjadi 'singt'."
+            },
+            {
+                id: 4,
+                question: "Lengkapi percikan dialog 3b bagian A:\nLustig! Sing_____ du auch so gut?",
+                options: ["-st", "-t", "-en", "-e"],
+                correct: 0,
+                explanation: "Personalpronomen 'du' mendapat akhiran konjugasi '-st' (singst)."
+            },
+            {
+                id: 5,
+                question: "Lengkapi percikan dialog 3b bagian B:\nParis!! ❤️ Sprich_____ du Französisch?",
+                options: ["-st", "-t", "-en", "-"],
+                correct: 0,
+                explanation: "Verba 'sprechen' mengalami perubahan vokal (e->i) untuk 'du' dan berakhiran '-st' (sprichst)."
+            },
+            {
+                id: 6,
+                question: "Manakah konjugasi verba 'arbeiten' yang tepat untuk subjek 'ihr' (kalian)?\nihr _____.",
+                options: ["arbeitet", "arbeitest", "arbeiten", "arbeite"],
+                correct: 0,
+                explanation: "Untuk subjek 'ihr', verba 'arbeiten' menambahkan huruf 'e' sebelum akhiran '-t' menjadi 'arbeitet'."
+            },
+            {
+                id: 7,
+                question: "Bagaimana respons konfirmasi penolakan yang sopan dalam bahasa Jerman (sesuai materi 4c/5a)?\n- Gehen wir ins Kino?\n- _____, das geht leider nicht.",
+                options: ["Ja, gern", "Nein", "Super", "Am Montag"],
+                correct: 1,
+                explanation: "Kata 'Nein' digunakan untuk menolak ajakan dengan sopan ('Nein, das geht leider nicht')."
+            },
+            {
+                id: 8,
+                question: "Preposisi apa yang digunakan untuk menyatakan hari (misal: hari Senin)?\n_____ Montag",
+                options: ["In", "Am", "Um", "Im"],
+                correct: 1,
+                explanation: "Keterangan waktu berupa hari dalam bahasa Jerman selalu menggunakan preposisi 'Am'."
+            },
+            {
+                id: 9,
+                question: "Terjemahkan ungkapan ajakan berikut ke dalam bahasa Jerman:\n'Pergi ke bioskop?'",
+                options: ["Gehen wir ins Kino?", "Gehen wir ins Theater?", "Gehen wir ins Café?", "Gehen wir ins Schwimmbad?"],
+                correct: 0,
+                explanation: "'Ins Kino' berarti ke bioskop, sehingga kalimat tanyanya 'Gehen wir ins Kino?'."
+            }
+        ];
+
+        let openedBoxes = JSON.parse(localStorage.getItem('openedBoxes')) || [];
+        let score = parseInt(localStorage.getItem('score')) || 0;
+        let activeBoxId = null;
+
+        const gridEl = document.getElementById('box-grid');
+        const openedCountEl = document.getElementById('opened-count');
+        const scoreEl = document.getElementById('score');
+        const modalEl = document.getElementById('question-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+        const submitBtn = document.getElementById('submit-answer');
+
+        function initGame() {
+            gridEl.innerHTML = '';
+            questions.forEach((q, index) => {
+                const isOpened = openedBoxes.includes(q.id);
+                const box = document.createElement('div');
+                box.className = `h-28 md:h-32 rounded-2xl flex flex-col items-center justify-center font-bold text-lg cursor-pointer transition-all duration-300 shadow-md ${
+                    isOpened 
+                        ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none' 
+                        : 'bg-gradient-to-tr from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white hover:scale-105 shadow-indigo-200'
+                }`;
+                box.innerHTML = `<span class="text-2xl mb-1">${isOpened ? '✅' : '🎁'}</span><span>Kotak ${index + 1}</span>`;
+                
+                if (!isOpened) {
+                    box.onclick = () => openBox(q.id);
+                }
+                gridEl.appendChild(box);
+            });
+            openedCountEl.textContent = openedBoxes.length;
+            scoreEl.textContent = score;
+        }
+
+        function openBox(id) {
+            activeBoxId = id;
+            const q = questions.find(item => item.id === id);
+            
+            modalTitle.textContent = `Soal Kotak #${id}`;
+            modalBody.innerHTML = `
+                <p class="text-slate-800 font-medium mb-4 whitespace-pre-line text-sm md:text-base leading-relaxed">${q.question}</p>
+                <div class="space-y-2.5" id="options-container">
+                    ${q.options.map((opt, i) => `
+                        <label class="flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 hover:bg-indigo-50/70 hover:border-indigo-300 cursor-pointer transition">
+                            <input type="radio" name="quiz-opt" value="${i}" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                            <span class="text-slate-700 font-medium text-sm md:text-base">${opt}</span>
+                        </label>
+                    `).join('')}
+                </div>
+                <div id="feedback" class="mt-4 hidden p-3.5 rounded-xl text-sm"></div>
+            `;
+            submitBtn.style.display = 'block';
+            submitBtn.textContent = 'Jawab';
+            submitBtn.onclick = checkAnswer;
+            
+            modalEl.classList.remove('hidden');
+            modalEl.classList.add('flex');
+        }
+
+        function checkAnswer() {
+            const selected = document.querySelector('input[name="quiz-opt"]:checked');
+            const feedbackEl = document.getElementById('feedback');
+            
+            if (!selected) {
+                // Mengganti alert dengan pemberitahuan ramah tanpa fungsi alert bawaan
+                feedbackEl.className = 'mt-4 p-3.5 rounded-xl text-sm bg-amber-50 text-amber-800 font-medium border border-amber-200';
+                feedbackEl.innerHTML = '⚠️ Silakan pilih salah satu jawaban terlebih dahulu!';
+                feedbackEl.classList.remove('hidden');
+                return;
+            }
+
+            const q = questions.find(item => item.id === activeBoxId);
+            const userChoice = parseInt(selected.value);
+            const optionsContainer = document.getElementById('options-container');
+            const radioInputs = optionsContainer.querySelectorAll('input');
+            
+            radioInputs.forEach(input => input.disabled = true);
+
+            if (userChoice === q.correct) {
+                score += 10;
+                feedbackEl.className = 'mt-4 p-3.5 rounded-xl text-sm bg-emerald-50 text-emerald-800 font-medium border border-emerald-200';
+                feedbackEl.innerHTML = `<strong>Benar! 🎉</strong> ${q.explanation}`;
+            } else {
+                feedbackEl.className = 'mt-4 p-3.5 rounded-xl text-sm bg-rose-50 text-rose-800 font-medium border border-rose-200';
+                feedbackEl.innerHTML = `<strong>Kurang tepat. ❌</strong> Jawaban yang benar: <em>${q.options[q.correct]}</em>.<br>${q.explanation}`;
+            }
+            
+            feedbackEl.classList.remove('hidden');
+            
+            if (!openedBoxes.includes(activeBoxId)) {
+                openedBoxes.push(activeBoxId);
+            }
+
+            localStorage.setItem('openedBoxes', JSON.stringify(openedBoxes));
+            localStorage.setItem('score', score);
+            
+            initGame();
+
+            submitBtn.textContent = 'Tutup';
+            submitBtn.onclick = closeModal;
+        }
+
+        function closeModal() {
+            modalEl.classList.remove('flex');
+            modalEl.classList.add('hidden');
+        }
+
+        function resetGame() {
+            if (confirm('Yakin ingin mereset permainan?')) {
+                localStorage.removeItem('openedBoxes');
+                localStorage.removeItem('score');
+                openedBoxes = [];
+                score = 0;
+                initGame();
+            }
+        }
+
+        initGame();
+    </script>
+</body>
+</html>
